@@ -1,0 +1,81 @@
+//Name: Coleman Johnston
+//Date: 20 Oct. 2015
+//Description: Programming Practice- File IO A
+#include<iostream>//cout 
+#include<fstream>//file IO
+#include<string>//string processing
+#include<iomanip>//setw();
+using namespace std;
+
+
+
+int main()
+{
+    ifstream fin;
+    ofstream fout;
+    char fName[12];
+    string firstName, lastName, bestName;
+    double avgScore, score; 
+    double highScore = 0;
+    fout.open("results.txt");
+    
+    //set up output formatting
+    fout.setf(ios::fixed);
+    fout.setf(ios::showpoint);
+    fout.precision(1);
+    fout.setf(ios::left);
+    
+    do
+    {
+        cout << "What is the name of the file that you\n"
+         <<"want to read from?(example: scores.txt)\n";
+        cin >> fName;
+        fin.open(fName);
+        if(fin.fail())
+        {
+            cout << "Sorry, the file you entered does not exist.\n";
+        }
+    }while(fin.fail());
+    
+    while(fin >> firstName >> lastName)
+    {       
+        if((firstName + lastName) == "Highestscore:")
+        {
+            break;
+        }
+        
+        avgScore = 0;
+        fout << setw(12) << firstName << setw(12) << lastName;
+        for(int i = 0; i < 6; i++)
+        {
+            if(i == 5)
+            {
+                fout.precision(2);    
+            }
+            else
+            {
+                fout.precision(1);
+            }
+            
+            fin >> score;
+            fout << setw(6) << score;
+            avgScore += score;
+        }
+        avgScore = avgScore / 6;
+        fout.precision(1);
+        fout << setw(9) << "Average: " << avgScore << endl;      
+        
+        if(avgScore > highScore)
+        {
+            
+            highScore = avgScore;
+            bestName = firstName + " " + lastName;           
+        }  
+    }
+     
+    fout << "\nHighest Average: " << bestName;  
+    
+    fin.close();
+    fout.close();       
+    return 0;
+}
